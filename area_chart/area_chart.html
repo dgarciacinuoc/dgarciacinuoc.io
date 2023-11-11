@@ -1,0 +1,175 @@
+<html>
+    <head>
+        <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+        <style>
+            body {
+                margin-left: 200px;
+                font-size: 18px;
+                font-family: 'Lato', sans-serif;
+            }
+            h1 {
+                text-align: center;
+            }
+            #title {
+                border: 3px solid green;
+            }
+        </style>
+        <script src="./water.js"></script>
+    </head>
+    <body>
+        <div id="title ">
+            <h1>Greenhouse gas emission in Montgomery county <br/>
+                in Metric Tons of CO2 Equivalent (MTCO2e)
+            </h1>
+        </div>
+
+        <svg id="chart" width="1000" height="10000"></svg>
+    </body>
+    <script>
+        let chartDOM = document.getElementById('chart');
+
+        const coord_color = '#403B0D'
+        const fill_unactive = '#E6DFA1';
+        const fill_active = '#403B0D';
+
+        const x_coord = 100;
+        const y_coord = 50;
+        const coord_length = 700;
+        const coord_height = 500;
+        const coord_width = 2;
+
+        const y_axis_line_value = 1000;
+        const axis_mark_length = 5;
+        const font_axis_size = 12;
+
+        const stroke_width = 2;
+
+        const max_y = 12000;
+
+        document.body.style.color = fill_active;
+
+        const x0 = x_coord;
+        const x1 = x_coord + coord_length;
+        const y0 = y_coord;
+        const y1 = y_coord + coord_height;
+
+        function draw_coordinates(){
+            draw_line(
+                x_coord, y_coord,
+                0,coord_height,
+                coord_color,coord_width
+                );
+            draw_line(
+                x_coord, y_coord + coord_height,
+                coord_length,0,
+                coord_color,coord_width);
+            draw_y_coord();
+            draw_x_coord();
+        }
+
+        function draw_line(x1, y1, length, height, color, width){
+            chartDOM.innerHTML += '<line x1="' + x1 + '" y1 = "' + y1 + '" ' +
+              'x2="' + (x1 + length) + '" y2="' + (y1 + height) + '" ' +
+              'style="stroke:' + color + ';stroke-width:' + width +'">' +
+              '</line>';
+        }
+        let data_set = [];
+        let labels = [];
+
+        for (var i=0; i < data.data.length; i++){
+            data_set.push(data.data[i][11]);
+            labels.push(data.data[i][8].substring(0,7));
+        }
+
+        function draw_area(){
+            let path = '<path d ="M100 550 ';
+
+
+
+            path = add_points(path, data_set, max_y, x0, x1, y0, y1);
+            point = graph_point(data_set.length - 1 , data_set.length, 0, max_y, x0, x1, y0, y1)
+            path += 'L' + point.x  + ' ' + point.y  + ' ';
+            path += 'Z" style="fill:' + fill_unactive + ';"></path>'
+            chartDOM.innerHTML += path;
+
+            
+            point = graph_point(0, data_set.length, data_set[0], max_y, x0, x1, y0, y1);
+            path = '<path d="M ' + point.x + ',' + point.y + ' ';
+            path = add_points(path, data_set, max_y, x0, x1, y0, y1);
+            path += '" style="fill:none;stroke:' + fill_active + ';stroke-width:' + stroke_width + 'px;"></path>'
+            chartDOM.innerHTML += path;
+
+        }
+
+        function add_points(path, data, max_y, x0, x1, y0, y1){
+            let max_x = data.length;
+            for (var i=0; i < max_x; i++){
+                let x = i;
+                let y = data[i];
+
+                point = graph_point(x, max_x, y, max_y, x0, x1, y0, y1);
+                path += 'L' + point.x + ',' + point.y + ' ';
+            }
+            return path;
+        }
+
+        function graph_point(x, max_x, y, max_y, x0, x1, y0, y1){
+            position = {x: null, y: null}
+            position.x = get_point_x(x, max_x, x0, x1);
+            position.y = get_point_y(y, max_y, y0, y1);
+            return position
+        }
+
+        function draw_x_coord(){
+            for(let i=1; i < labels.length; i += 2){
+                x = get_point_x(i, labels.length, x0, x1);
+                draw_line(x, y_coord + coord_height, 0, axis_mark_length, coord_color, coord_width);
+                draw_text(
+                    labels[i], x, y_coord + coord_height + axis_mark_length + 2 , 
+                    'start', font_axis_size, fill_active, true
+                    );
+            }   
+        }
+
+        function draw_y_coord(){
+            let drawed_line = y_axis_line_value;
+            
+            while (max_y > drawed_line){
+                y = get_point_y(drawed_line, max_y, y0, y1)
+                draw_line(x_coord, y, -axis_mark_length, 0, coord_color, coord_width);
+                draw_text(
+                    drawed_line, 
+                    x_coord - axis_mark_length - 2, y + font_axis_size/2, 
+                    'end',
+                    font_axis_size, fill_active
+                    );
+                drawed_line += y_axis_line_value;
+            }
+        }
+
+        function draw_text(text, x, y, anchor, font_size, color, vertical = false){
+            if (vertical) {
+                mode = 'writing-mode: tb'
+
+            } else {
+                mode = 'writing-mode: horizontal-tb'
+            }
+            let text_svg = '<text text-anchor="' + anchor + '" '+
+                    'x="' + x + '" y="' + y + '"'+ 
+                    ' style="font-size:' + font_size + 'px;fill:' + color +';'+
+                    mode + '">' + text + '</text>'
+
+            chartDOM.innerHTML += text_svg;
+        }
+
+        function get_point_x(x, max_x, x0, x1){
+            return (x / (max_x) ) * (x1 - x0) + x0
+        }
+
+        function get_point_y(y, max_y, y0, y1){
+            return y1 - (y / (max_y) ) * (y1 - y0);
+        }
+        draw_area();
+        draw_coordinates();
+    </script>
+</html>

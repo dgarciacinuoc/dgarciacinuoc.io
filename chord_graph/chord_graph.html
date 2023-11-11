@@ -1,0 +1,148 @@
+<!doctype html>
+<html class="zc-html">
+
+<head>
+  <meta charset="utf-8">
+  <title>ZingSoft Demo</title>
+  <script nonce="undefined" src="https://cdn.zingchart.com/zingchart.min.js"></script>
+  <style>
+    .chart--container {
+      height: 100%;
+      width: 100%;
+      min-height: 530px;
+    }
+
+    .zc-ref {
+      display: none;
+    }
+  </style>
+</head>
+​
+
+<body class="zc-body">
+  ​
+  <div id="myChart" class="chart--container">
+    <a href="https://www.zingchart.com/" rel="noopener" class="zc-ref">Powered by ZingChart</a>
+  </div>
+
+  <script>
+    ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"]; // DEFINE DATA
+    // -----------------------------
+    let chartData = [{
+        text: 'England',
+        values: [0, 60, 80, 76, 68],
+        style: {
+          band: {
+            alpha: 1,
+            backgroundColor: '#999999',
+          },
+          label: {
+            bold: true,
+            fontFamily: 'arial',
+            fontSize: '14px',
+          },
+        },
+      },
+      {
+        text: 'France',
+        values: [43, 0, 59, 59, 49],
+        style: {
+          band: {
+            aplpha: 1,
+            backgroundColor: '#0025FF',
+          },
+          label: {
+            bold: true,
+            fontFamily: 'arial',
+            fontSize: '14px',
+          },
+        },
+      },
+      {
+        text: 'Ireland',
+        values: [53, 36, 0, 70, 57],
+        style: {
+          band: {
+            alpha: 1,
+            backgroundColor: '#0DA221',
+          },
+          label: {
+            bold: true,
+            fontFamily: 'arial',
+            fontSize: '14px',
+          },
+        },
+      },
+      {
+        text: 'Scotland',
+        values: [46, 40, 66, 0, 51],
+        style: {
+          band: {
+            alpha: 1,
+            backgroundColor: '#082693',
+          },
+          label: {
+            bold: true,
+            fontFamily: 'arial',
+            fontSize: '14px',
+          },
+        },
+      },
+      {
+        text: 'Wales',
+        values: [61, 51, 70, 75, 0],
+        style: {
+          band: {
+            alpha: 1,
+            backgroundColor: '#D00704',
+          },
+          label: {
+            bold: true,
+            fontFamily: 'arial',
+            fontSize: '14px',
+          },
+        },
+      },
+    ];
+
+    // CHART CONFIG
+    // -----------------------------
+    let chartConfig = {
+      type: 'chord',
+      backgroundColor: '#fff',
+      title: {
+        text: 'The historically 5 nations winning games, including Home Nations, 5 Nations and 6 Nations tournaments',
+        backgroundColor: 'none',
+        fontColor: '#333',
+        fontFamily: 'arial',
+        textAlign: 'left',
+      },
+      legend: {
+        backgroundColor: 'none',
+        borderColor: 'gray',
+        borderWidth: '2px',
+        shadow: false,
+      },
+      options: {
+        anglePadding: 5,
+        bandSpace: 2,
+        colorType: 'palette',
+        palette: ['#999999', '#0025FF', '#0DA221', '#082693', '#D00704'],
+        radius: 110,
+      },
+      plotarea: {
+        margin: '25px 40px 15px 40px',
+      },
+      series: chartData,
+    };
+
+    // RENDER CHARTS
+    // -----------------------------
+    zingchart.render({
+      id: 'myChart',
+      data: chartConfig,
+    });
+  </script>
+</body>
+
+</html>

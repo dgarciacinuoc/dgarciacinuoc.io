@@ -1,0 +1,64 @@
+<html>
+    <head>
+        <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+        <style>
+            body {
+                margin-left: 200px;
+                font-size: 18px;
+                font-family: 'Lato', sans-serif;
+            }
+        </style>
+        <script src="./shots.js"></script>
+    </head>
+    <body>
+        <h1>Shots made by women in NYC historic record</h1>
+        <svg id="chart" width="1000" height="1000">
+        </svg>
+    </body>
+    <script>
+        let chartDOM = document.getElementById('chart');
+        const background_color = '#110F0E'
+        const fill_unactive = '#BA9A95';
+        const fll_active = '#8A1604';
+        const square_size = 12;
+        const border = 3;
+        const squares = 45*45;
+        const rows = Math.sqrt(squares);
+
+        document.body.style.backgroundColor = background_color;
+        document.body.style.color = fill_unactive;
+
+        let female_total = 0;
+
+        for (let i = 0; i < shots.data.length; i++){
+            if(shots.data[i][22] == 'F'){
+                female_total++
+            }
+        }
+        let proportion = female_total / shots.data.length;
+
+        chartDOM_innerText = ''
+        let color = fill_unactive;
+        for(let i=0; i < squares; i++){
+            
+            x = (i % rows) * square_size + border * (i % rows);
+            y = (Math.floor(i / rows)) * square_size + border * (Math.floor(i / rows));
+
+            if(squares - i > proportion * squares ) {
+                color = fill_unactive;
+            } else {
+                color = fll_active;
+            }
+            chartDOM_innerText += draw_square(x, y, square_size, color)
+
+        }
+
+        chartDOM.innerHTML = chartDOM_innerText;
+
+        function draw_square(x, y, size, color){
+            return text = 
+                '<rect x="' + x + '" y="' + y + '" width="' + size + '" height="' + size + '" style="fill:' + color +';"></rect>'
+        }
+
+    </script>
+</html>
